@@ -174,7 +174,7 @@
         </style>
     </head>
 
-    <body class="staticrypt-body">
+    <body class="staticrypt-body"><a data-testid="notes-shortcut" href="todo.html" style="display:block;box-sizing:border-box;width:calc(100% - 32px);max-width:600px;margin:16px auto 0;padding:16px 20px;background:#fff1e8;border:2px solid #f26b1d;border-radius:14px;color:#1c1c1e;text-decoration:none;font:600 16px/1.5 system-ui,sans-serif"><span aria-hidden="true">📝 </span><strong>Project to-do &amp; notes</strong><span style="display:block;font-size:13px;font-weight:400">View notes and add feedback for the agents →</span></a>
         <div id="staticrypt_loading" class="staticrypt-spinner-container">
             <div class="staticrypt-spinner"></div>
         </div>
@@ -827,11 +827,10 @@ exports.init = init;
                 rememberExpirationKey: "staticrypt_expiration",
                 rememberPassphraseKey: "staticrypt_passphrase",
                 replaceHtmlCallback: function (plainHTML) {
-                    /* hosts-todo-sidebar-v1 */
-                    const link = '<a class="nav-item" data-testid="nav-todo" href="todo.html" style="color:inherit;text-decoration:none">To-do &amp; notes</a>';
-                    if (!/data-testid=["']nav-todo["']/.test(plainHTML)) {
-                        plainHTML = plainHTML.replace(/(<nav\b[^>]*\bid=["']drawer["'][^>]*>)/i, '$1' + link);
-                    }
+                    /* hosts-todo-sidebar-v2 */
+                    const link = "<a class=\"nav-item\" data-testid=\"nav-todo\" href=\"todo.html\" style=\"color:#1c1c1e;text-decoration:none;background:#fff1e8;border:2px solid #f26b1d;border-radius:14px;padding:14px 12px;margin-bottom:12px\"><span aria-hidden=\"true\" style=\"font-size:24px\">📝</span><span><strong style=\"display:block\">Project to-do &amp; notes</strong><small style=\"display:block;font-size:12px;font-weight:400\">View notes · Add a note</small></span></a>";
+                    plainHTML = plainHTML.replace(/<a\b[^>]*data-testid=["']nav-todo["'][^>]*>[\s\S]*?<\/a>/i, '');
+                    plainHTML = plainHTML.replace(/(<nav\b[^>]*\bid=["']drawer["'][^>]*>)/i, '$1' + link);
                     document.write(plainHTML);
                     document.close();
                 },

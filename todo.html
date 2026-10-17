@@ -4,167 +4,142 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#f26b1d">
-<title>HOSTS — To-do &amp; notes</title>
+<meta name="referrer" content="no-referrer">
+<title>HOSTS — Project to-do &amp; notes</title>
 <style>
-  :root { --orange: #f26b1d; --ink: #1c1c1e; --muted: #6b6b73; --line: #ececf0; --bg: #fff; --surface: #f7f7f9; --radius: 16px; }
-  * { box-sizing: border-box; }
-  body { margin: 0; color: var(--ink); background: #f5f4f2; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-  button, input, textarea { font: inherit; color: inherit; }
-  button { cursor: pointer; }
-  :focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
-  .site-header { max-width: 800px; margin: auto; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-  .site-header a { color: var(--ink); text-underline-offset: 4px; }
-  .brand { color: #c84d0a; font-weight: 800; letter-spacing: .08em; }
-  #screen { max-width: 752px; margin: 0 auto 32px; background: var(--bg); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
-  .screen-bar { padding: 20px 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .screen-bar h1 { margin: 0; font-size: 24px; line-height: 1.2; }
-  .pad { padding: 24px; }
-  .sub { font-size: 14px; color: var(--muted); }
-  .stack { display: grid; gap: 12px; }
-  .empty { padding: 28px 12px; background: var(--surface); color: var(--muted); text-align: center; border-radius: 14px; }
-  label.field { display: grid; gap: 6px; margin-bottom: 18px; font-weight: 600; font-size: 14px; }
-  .field input, .field textarea { min-width: 0; width: 100%; padding: 12px; font-weight: 400; font-size: 16px; border: 1px solid #d4d4d8; border-radius: 12px; background: var(--bg); }
-  .field textarea { min-height: 112px; resize: vertical; }
-  .btn { min-height: 50px; padding: 0 18px; border: 0; border-radius: 12px; background: var(--orange); color: #fff; font-weight: 700; }
-  .btn.ghost { background: var(--surface); color: var(--ink); }
-  .icon-btn { border: 0; border-radius: 12px; display: grid; place-items: center; }
-  .note { background: #fff1e8; border-radius: 12px; padding: 10px 12px; }
-  .error { color: #b91c1c; }
-  @media (max-width: 600px) {
-    body { background: var(--bg); }
-    #screen { border: 0; border-radius: 0; margin-bottom: 0; }
-    .site-header, .screen-bar, .pad { padding: 16px; }
-    .screen-bar h1 { font-size: 22px; }
-  }
-
-  .todo-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; min-width: 0; }
-  .todo-head { display: grid; grid-template-columns: 28px minmax(0, 1fr) 44px; gap: 8px; align-items: center; margin-bottom: 10px; }
-  .todo-head input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--orange); margin: 0; }
-  .todo-head .field { margin: 0; min-width: 0; }
-  .todo-head .icon-btn { width: 44px; height: 44px; box-shadow: none; background: var(--surface); font-size: 18px; }
-  .todo-card .field:last-child { margin: 0; }
-  .todo-card textarea { min-height: 76px; }
-  .todo-completed [data-testid="todo-item-title"] { text-decoration: line-through; color: var(--muted); }
-  .todo-add { display: flex; gap: 8px; align-items: end; }
-  .todo-add .field { flex: 1; min-width: 0; margin: 0; }
-  .todo-add .btn { padding: 0 14px; }
-  .todo-summary { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 18px 0 10px; }
-  .todo-summary h2 { font-size: 17px; margin: 0; }
-  .todo-undo { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 0; }
-  .todo-export { padding: 0 12px; min-height: 42px; font-size: 14px; }
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
-
-
-  .todo-head textarea { min-height: 50px; resize: none; overflow: hidden; }
+:root{--orange:#c2410c;--ink:#1c1c1e;--muted:#62626b;--line:#e6e6eb;--surface:#f7f7f9}
+*{box-sizing:border-box}body{margin:0;background:#f5f4f2;color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea{font:inherit;color:inherit}button,a{touch-action:manipulation}button{cursor:pointer}a{color:var(--orange);text-underline-offset:3px}:focus-visible{outline:3px solid #f26b1d;outline-offset:3px}
+.site-header{max-width:900px;margin:auto;padding:20px 24px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:800;letter-spacing:.08em;color:var(--orange)}main{max-width:852px;margin:0 auto 32px;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden}.heading{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:28px;border-bottom:1px solid var(--line)}h1{margin:0 0 8px;font-size:28px;line-height:1.2}.sub{color:var(--muted);font-size:14px;margin:0}.pad{padding:24px 28px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 18px;border:0;border-radius:12px;background:var(--orange);color:#fff;font-weight:700;text-decoration:none;white-space:nowrap}.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}.btn:disabled{opacity:.6;cursor:wait}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.connect{background:var(--surface);padding:18px;border-radius:14px;margin-bottom:20px}.connect h2{font-size:17px;margin:0 0 6px}.connect .actions{margin-top:12px}label{display:grid;gap:6px;font-size:14px;font-weight:600;margin:14px 0}input,textarea{width:100%;min-width:0;padding:12px;border:1px solid #cfcfd6;border-radius:10px;background:#fff}textarea{min-height:140px;resize:vertical}.status{margin:0 0 16px;color:var(--muted);font-size:14px}.status.error{color:#b91c1c}.filters{display:flex;gap:6px;margin:0 0 18px}.filters button{min-height:42px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:8px 14px}.filters button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}.notes{display:grid;gap:16px}.note-card{padding:20px;border:1px solid var(--line);border-radius:14px;min-width:0}.note-card h2{font-size:19px;line-height:1.3;margin:8px 0 12px;overflow-wrap:anywhere}.note-body,.reply-body{white-space:pre-wrap;overflow-wrap:anywhere}.note-body{margin:0 0 16px}.note-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:13px}.badge{background:#fff1e8;color:#9a3412;border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700}.badge.done{background:#e8f7ee;color:#166534}.note-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:12px;border-top:1px solid var(--line)}.text-btn{background:none;border:0;padding:8px 0;min-height:42px;color:var(--orange);font-weight:600}.empty{padding:36px 18px;text-align:center;background:var(--surface);border-radius:14px}.empty h2{font-size:18px;margin:0 0 6px}.composer{border:2px solid #f26b1d;border-radius:14px;padding:20px;margin-bottom:20px}.composer h2{font-size:19px;margin:0}.reply{border-left:3px solid var(--line);padding:10px 14px;margin-top:14px}.local{border:1px dashed #c4b5fd;border-radius:14px;padding:18px;margin-top:24px}.local h2{font-size:17px;margin:0 0 10px}.local pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:14px}.help{font-size:13px;color:var(--muted)}[hidden]{display:none!important}
+@media(max-width:600px){body{background:#fff}main{border:0;border-radius:0;margin:0}.site-header,.pad{padding:16px}.heading{padding:20px 16px;flex-direction:column;gap:16px}.heading>.btn{width:100%}h1{font-size:26px}.note-card{padding:16px}}
 </style>
 </head>
 <body data-document="hosts-todo-public-shell">
 <header class="site-header"><a href="./" aria-label="Back to app">← Back to app</a><span class="brand">HOSTS</span></header>
-<main id="screen"></main>
+<main>
+  <header class="heading"><div><h1>Project to-do &amp; notes</h1><p class="sub">Shared notes for the people and agents building HOSTS.</p></div><a class="btn" data-testid="note-add" href="https://github.com/daveyboyc/Hosts/issues/new?labels=agent-note" target="_blank" rel="noopener noreferrer" onclick="openComposer(event)">＋ Add note</a></header>
+  <div class="pad">
+    <section class="connect" id="connection">
+      <h2>Notes live in the private repo</h2><p class="sub">Connect GitHub to see them here, or open the shared notes in GitHub. Notes you add are saved for repo agents to pick up.</p>
+      <div class="actions"><button class="btn ghost" data-testid="notes-connect" onclick="document.getElementById('connect-form').hidden=false;document.getElementById('github-token').focus()">Connect GitHub</button><a href="https://github.com/daveyboyc/Hosts/issues?q=is%3Aissue+label%3Aagent-note" target="_blank" rel="noopener noreferrer">Open shared notes in GitHub ↗</a></div>
+      <form id="connect-form" hidden onsubmit="connectGitHub(event)"><label>GitHub token<input id="github-token" data-testid="notes-token" type="password" autocomplete="off" spellcheck="false" required></label><p class="help">Use a fine-grained token with access to <b>Hosts → Issues: read and write</b>. It stays in this tab and is never saved. <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Create a token</a></p><button class="btn" data-testid="notes-connect-submit">Show repo notes</button></form>
+    </section>
+    <div class="actions" id="connected-actions" hidden style="margin-bottom:16px"><span class="sub">Private repo · shared with agents</span><button class="text-btn" data-testid="notes-refresh" onclick="loadNotes()">Refresh</button><button class="text-btn" onclick="disconnect()">Disconnect</button></div>
+    <p class="status" id="status" data-testid="notes-status" role="status">Connect to view the latest repo notes.</p>
+    <form class="composer" id="composer" hidden onsubmit="saveNote(event)"><h2>Add a note</h2><label>Title<input data-testid="note-title" id="note-title" maxlength="200" required></label><label>Note<textarea data-testid="note-body" id="note-body" maxlength="20000" required placeholder="What needs doing? Add any context the agents should know."></textarea></label><div class="actions"><button class="btn" data-testid="note-save" id="note-save">Save note to repo</button><button class="btn ghost" type="button" onclick="document.getElementById('composer').hidden=true">Cancel</button></div></form>
+    <div class="filters" role="group" aria-label="Note status"><button data-filter="open" aria-pressed="true" onclick="setFilter('open')">To do</button><button data-filter="closed" aria-pressed="false" onclick="setFilter('closed')">Done</button><button data-filter="all" aria-pressed="false" onclick="setFilter('all')">All notes</button></div>
+    <section class="notes" id="notes" aria-label="Repo notes"><div class="empty"><h2>Your shared notes will appear here</h2><p class="sub">Use “Add note” to capture a task, idea or change for the agents.</p></div></section>
+    <section class="local" id="local-notes" hidden><h2>Notes from this browser</h2><p class="sub">These older notes are still only on this device. Save them to the repo so agents can read them.</p><pre id="local-preview"></pre><button class="btn ghost" onclick="migrateLocal()">Save these notes to repo</button></section>
+  </div>
+</main>
 <script>
 'use strict';
-const $ = (s, r = document) => r.querySelector(s);
-const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const bar = (title, extra = '') => `<div class="screen-bar"><h1>${esc(title)}</h1>${extra}</div>`;
-function show(html) { $('#screen').innerHTML = html; }
-function resizeTodoTitle(el) { el.style.height = 'auto'; el.style.height = (el.scrollHeight + 2) + 'px'; }
-
-const TODO_KEY = 'hosts-todo-v1';
-let todoDoc, deletedTodo = null;
-let todoSaveStatus = 'Changes save automatically in this browser';
-function loadTodo() {
-  todoDoc = { version: 1, title: 'HOSTS to-do & notes', notes: '', items: [] };
-  try {
-    const raw = localStorage.getItem(TODO_KEY);
-    if (raw === null) return;
-    const doc = JSON.parse(raw);
-    if (!doc || doc.version !== 1 || typeof doc.title !== 'string' || typeof doc.notes !== 'string' || !Array.isArray(doc.items) ||
-        !doc.items.every((item) => item && typeof item.title === 'string' && typeof item.notes === 'string' && typeof item.done === 'boolean')) {
-      throw new Error('Invalid document');
-    }
-    todoDoc = doc;
-    todoSaveStatus = 'Saved in this browser';
-  } catch {
-    todoSaveStatus = 'Could not load a saved document. Changes last for this visit unless saving succeeds. Export a copy before leaving.';
+const REPO = 'daveyboyc/Hosts';
+const LABEL = 'agent-note';
+let token = '', notes = [], filter = 'open', loading = false, localDraft = '';
+const $ = id => document.getElementById(id);
+const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const issueUrl = number => `https://github.com/${REPO}/issues/${number}`;
+function status(message, error = false) { $('status').textContent = message; $('status').classList.toggle('error', error); }
+async function api(path, options = {}) {
+  const response = await fetch(`https://api.github.com/repos/${REPO}${path}`, {
+    ...options, credentials: 'omit', headers: { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28', ...(options.body ? { 'Content-Type': 'application/json' } : {}) }
+  });
+  if (!response.ok) {
+    if (response.status === 401 || response.status === 403 || response.status === 404) throw new Error('GitHub could not grant access. Check that your token can read and write Hosts issues.');
+    throw new Error('GitHub could not save or load the notes. Try again; your draft is still here.');
   }
+  return response.json();
 }
-function saveTodo() {
-  try {
-    localStorage.setItem(TODO_KEY, JSON.stringify(todoDoc));
-    todoSaveStatus = 'Saved in this browser';
-  } catch {
-    todoSaveStatus = 'Could not save in this browser. Changes last for this visit. Export a copy before leaving.';
-  }
-  const el = $('[data-testid="todo-save-status"]');
-  if (el) { el.textContent = todoSaveStatus; el.classList.toggle('error', todoSaveStatus.startsWith('Could not')); }
-}
-function todoPage() {
-  if (!todoDoc) loadTodo();
-  show(`${bar('To-do & notes', '<button class="btn ghost todo-export" data-testid="todo-export" onclick="exportTodo()">Export .md</button>')}
-    <div class="pad">
-      <p class="sub" style="margin-top:0">Your working document. Saved on this browser only; export a copy to share or keep a backup.</p>
-      <p class="sub ${todoSaveStatus.startsWith('Could not') ? 'error' : ''}" data-testid="todo-save-status" role="status">${esc(todoSaveStatus)}</p>
-      <label class="field">Document title<input data-testid="todo-title" maxlength="200" value="${esc(todoDoc.title)}" oninput="todoDoc.title=this.value;saveTodo()"></label>
-      <label class="field">Document notes<textarea data-testid="todo-notes" maxlength="20000" placeholder="Ideas, questions, decisions…" oninput="todoDoc.notes=this.value;saveTodo()">${esc(todoDoc.notes)}</textarea></label>
-      <form class="todo-add" onsubmit="addTodo(event)">
-        <label class="field">New task<input data-testid="todo-new" maxlength="300" required placeholder="What needs doing?" oninput="this.setCustomValidity('')"></label>
-        <button class="btn" type="submit" data-testid="todo-add">Add</button>
-      </form>
-      ${deletedTodo ? '<div class="note todo-undo"><span>Task deleted.</span><button class="btn ghost" data-testid="todo-undo" onclick="undoTodo()">Undo</button></div>' : ''}
-      <div class="todo-summary"><h2>Tasks</h2><span class="sub" data-testid="todo-progress" role="status"></span></div>
-      <div class="stack">${todoDoc.items.length ? todoDoc.items.map((item, i) => `
-        <div class="todo-card ${item.done ? 'todo-completed' : ''}" data-testid="todo-item">
-          <div class="todo-head">
-            <input type="checkbox" data-testid="todo-done" aria-label="Task completed" ${item.done ? 'checked' : ''} onchange="updateTodo(${i},'done',this.checked);this.closest('.todo-card').classList.toggle('todo-completed',this.checked)">
-            <label class="field"><span class="sr-only">Task title</span><textarea rows="1" aria-label="Task title" data-testid="todo-item-title" maxlength="300" oninput="resizeTodoTitle(this);updateTodo(${i},'title',this.value)">${esc(item.title)}</textarea></label>
-            <button class="icon-btn" data-testid="todo-delete" aria-label="Delete task" title="Delete task" onclick="deleteTodo(${i})">×</button>
-          </div>
-          <label class="field">Task notes<textarea data-testid="todo-item-notes" maxlength="20000" placeholder="Add context, links or next steps…" oninput="updateTodo(${i},'notes',this.value)">${esc(item.notes)}</textarea></label>
-        </div>`).join('') : '<div class="empty">No tasks yet. Add your first task above.</div>'}</div>
-    </div>`);
-  updateTodoProgress();
-  document.querySelectorAll('[data-testid="todo-item-title"]').forEach(resizeTodoTitle);
-}
-function updateTodoProgress() {
-  const el = $('[data-testid="todo-progress"]');
-  if (el) el.textContent = `${todoDoc.items.filter((item) => item.done).length} of ${todoDoc.items.length} completed`;
-}
-function addTodo(event) {
+async function connectGitHub(event) {
   event.preventDefault();
-  const input = $('[data-testid="todo-new"]');
-  const title = input.value.trim();
-  if (!title) { input.setCustomValidity('Enter a task title.'); input.reportValidity(); return; }
-  todoDoc.items.push({ title, notes: '', done: false });
-  saveTodo(); todoPage(); $('[data-testid="todo-new"]').focus();
+  if (loading) return;
+  token = $('github-token').value.trim();
+  $('github-token').value = '';
+  const connected = await loadNotes();
+  if (connected) { $('connection').hidden = true; $('connected-actions').hidden = false; }
+  else token = '';
 }
-function updateTodo(index, field, value) {
-  todoDoc.items[index][field] = value;
-  saveTodo();
-  if (field === 'done') updateTodoProgress();
+function disconnect() {
+  token = ''; notes = []; $('connection').hidden = false; $('connected-actions').hidden = true; $('composer').hidden = true;
+  status('Disconnected. Your notes remain saved in the private repo.'); renderNotes();
 }
-function deleteTodo(index) {
-  deletedTodo = { index, item: todoDoc.items.splice(index, 1)[0] };
-  saveTodo(); todoPage(); $('[data-testid="todo-undo"]').focus();
+async function loadNotes() {
+  if (!token || loading) return false;
+  const connectionToken = token;
+  loading = true; status('Loading repo notes…');
+  try {
+    const result = await api(`/issues?state=all&labels=${LABEL}&per_page=100&sort=updated&direction=desc`);
+    if (token !== connectionToken) return false;
+    if (!Array.isArray(result)) throw new Error('GitHub returned an unexpected response. Please try again.');
+    notes = result.filter(note => !note.pull_request && Number.isInteger(note.number) && typeof note.title === 'string');
+    renderNotes(); status(`${notes.filter(note => note.state === 'open').length} open notes · Saved in the repo for agents`);
+    return true;
+  } catch (error) { status(error.message, true); return false; }
+  finally { loading = false; }
 }
-function undoTodo() {
-  if (!deletedTodo) return;
-  const index = Math.min(deletedTodo.index, todoDoc.items.length);
-  todoDoc.items.splice(index, 0, deletedTodo.item);
-  deletedTodo = null;
-  saveTodo(); todoPage(); document.querySelectorAll('[data-testid="todo-item-title"]')[index].focus();
+function setFilter(value) { filter = value; renderNotes(); }
+function renderNotes() {
+  document.querySelectorAll('[data-filter]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === filter)));
+  const visible = notes.filter(note => filter === 'all' || note.state === filter);
+  $('notes').innerHTML = visible.length ? visible.map(note => `<article class="note-card" data-testid="repo-note" data-number="${note.number}">
+    <div class="note-meta"><span class="badge ${note.state === 'closed' ? 'done' : ''}">${note.state === 'closed' ? 'Done' : 'To do'}</span><span>#${note.number}</span><span>${esc(note.user?.login || '')}</span></div>
+    <h2>${esc(note.title)}</h2><p class="note-body" data-testid="repo-note-body">${esc(note.body || '')}</p>
+    <footer class="note-footer"><a href="${issueUrl(note.number)}" target="_blank" rel="noopener noreferrer">View or edit in GitHub ↗</a><button class="text-btn" data-testid="note-toggle" onclick="toggleNote(${note.number},'${note.state === 'closed' ? 'open' : 'closed'}')">${note.state === 'closed' ? 'Reopen' : 'Mark done'}</button></footer>
+    ${note.comments ? `<button class="text-btn" onclick="showUpdates(${note.number},this)">View agent updates (${Number(note.comments)})</button><div id="updates-${note.number}"></div>` : ''}
+  </article>`).join('') : `<div class="empty"><h2>${token ? (filter === 'closed' ? 'No completed notes yet' : 'No notes here yet') : 'Your shared notes will appear here'}</h2><p class="sub">${token ? 'Use “Add note” to capture a task or change for the agents.' : 'Connect GitHub to see your private notes, or use “Add note” to create one in GitHub.'}</p></div>`;
 }
-function exportTodo() {
-  const tasks = todoDoc.items.map((item) => `- [${item.done ? 'x' : ' '}] ${item.title}${item.notes ? '\n' + item.notes.split('\n').map((line) => '  ' + line).join('\n') : ''}`).join('\n\n');
-  const text = `# ${todoDoc.title || 'HOSTS to-do & notes'}\n\n${todoDoc.notes ? todoDoc.notes + '\n\n' : ''}## Tasks\n\n${tasks}\n`;
-  const url = URL.createObjectURL(new Blob([text], { type: 'text/markdown;charset=utf-8' }));
-  const a = document.createElement('a');
-  a.href = url; a.download = 'hosts-todo.md'; a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+function openComposer(event) {
+  if (!token) return;
+  event.preventDefault(); $('composer').hidden = false; $('note-title').focus();
 }
-
-
-todoPage();
+async function saveNote(event) {
+  event.preventDefault();
+  if (!token) return;
+  const connectionToken = token;
+  const title = $('note-title').value.trim(), body = $('note-body').value.trim();
+  if (!title || !body) { status('Add a title and note before saving.', true); return; }
+  $('note-save').disabled = true;
+  try {
+    const note = await api('/issues', { method: 'POST', body: JSON.stringify({ title, body, labels: [LABEL] }) });
+    if (token !== connectionToken) return;
+    if (!Number.isInteger(note.number)) throw new Error('GitHub did not confirm the saved note. Check the repo before trying again.');
+    notes = [note, ...notes.filter(item => item.number !== note.number)]; filter = 'open'; renderNotes();
+    $('composer').reset(); $('composer').hidden = true; status('Note saved in the repo. Agents can pick it up.');
+  } catch (error) { status(error.message, true); }
+  finally { $('note-save').disabled = false; }
+}
+async function toggleNote(number, state) {
+  const connectionToken = token;
+  try { const updated = await api(`/issues/${number}`, { method: 'PATCH', body: JSON.stringify({ state }) }); if (token !== connectionToken) return; notes = notes.map(note => note.number === number ? updated : note); renderNotes(); status('Note updated in the repo.'); }
+  catch (error) { status(error.message, true); }
+}
+async function showUpdates(number, button) {
+  const connectionToken = token;
+  button.disabled = true;
+  try {
+    const updates = await api(`/issues/${number}/comments?per_page=100`);
+    if (token !== connectionToken) return;
+    $('updates-' + number).innerHTML = updates.map(update => `<div class="reply"><b>${esc(update.user?.login)}</b><div class="reply-body">${esc(update.body)}</div></div>`).join('');
+    button.hidden = true;
+  } catch (error) { status(error.message, true); }
+  finally { button.disabled = false; }
+}
+function restoreLocalDraft() {
+  try {
+    const raw = localStorage.getItem('hosts-todo-v1'); if (!raw) return;
+    const doc = JSON.parse(raw);
+    if (!doc || typeof doc.notes !== 'string' || !Array.isArray(doc.items)) return;
+    const tasks = doc.items.filter(item => typeof item?.title === 'string').map(item => `- [${item.done ? 'x' : ' '}] ${item.title}${typeof item.notes === 'string' && item.notes ? '\n  ' + item.notes.replaceAll('\n','\n  ') : ''}`).join('\n\n');
+    localDraft = [doc.notes, tasks].filter(Boolean).join('\n\n');
+    if (localDraft) { $('local-notes').hidden = false; $('local-preview').textContent = localDraft; }
+  } catch { /* Never overwrite or delete older browser notes. */ }
+}
+function migrateLocal() {
+  if (token) { $('composer').hidden = false; $('note-title').value = 'Notes from the earlier to-do document'; $('note-body').value = localDraft; $('note-title').focus(); }
+  else window.open(`https://github.com/${REPO}/issues/new?${new URLSearchParams({ labels: LABEL, title: 'Notes from the earlier to-do document', body: localDraft })}`, '_blank', 'noopener,noreferrer');
+}
+window.addEventListener('focus', () => { if (token) loadNotes(); });
+restoreLocalDraft();
 </script>
 </body>
 </html>
