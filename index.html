@@ -826,7 +826,15 @@ exports.init = init;
             const templateConfig = {
                 rememberExpirationKey: "staticrypt_expiration",
                 rememberPassphraseKey: "staticrypt_passphrase",
-                replaceHtmlCallback: null,
+                replaceHtmlCallback: function (plainHTML) {
+                    /* hosts-todo-sidebar-v1 */
+                    const link = '<a class="nav-item" data-testid="nav-todo" href="todo.html" style="color:inherit;text-decoration:none">To-do &amp; notes</a>';
+                    if (!/data-testid=["']nav-todo["']/.test(plainHTML)) {
+                        plainHTML = plainHTML.replace(/(<nav\b[^>]*\bid=["']drawer["'][^>]*>)/i, '$1' + link);
+                    }
+                    document.write(plainHTML);
+                    document.close();
+                },
                 clearLocalStorageCallback: null,
             };
 

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f26b1d">
+<title>HOSTS — To-do &amp; notes</title>
+<style>
+  :root { --orange: #f26b1d; --ink: #1c1c1e; --muted: #6b6b73; --line: #ececf0; --bg: #fff; --surface: #f7f7f9; --radius: 16px; }
+  * { box-sizing: border-box; }
+  body { margin: 0; color: var(--ink); background: #f5f4f2; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  button, input, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+  .site-header { max-width: 800px; margin: auto; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .site-header a { color: var(--ink); text-underline-offset: 4px; }
+  .brand { color: #c84d0a; font-weight: 800; letter-spacing: .08em; }
+  #screen { max-width: 752px; margin: 0 auto 32px; background: var(--bg); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+  .screen-bar { padding: 20px 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .screen-bar h1 { margin: 0; font-size: 24px; line-height: 1.2; }
+  .pad { padding: 24px; }
+  .sub { font-size: 14px; color: var(--muted); }
+  .stack { display: grid; gap: 12px; }
+  .empty { padding: 28px 12px; background: var(--surface); color: var(--muted); text-align: center; border-radius: 14px; }
+  label.field { display: grid; gap: 6px; margin-bottom: 18px; font-weight: 600; font-size: 14px; }
+  .field input, .field textarea { min-width: 0; width: 100%; padding: 12px; font-weight: 400; font-size: 16px; border: 1px solid #d4d4d8; border-radius: 12px; background: var(--bg); }
+  .field textarea { min-height: 112px; resize: vertical; }
+  .btn { min-height: 50px; padding: 0 18px; border: 0; border-radius: 12px; background: var(--orange); color: #fff; font-weight: 700; }
+  .btn.ghost { background: var(--surface); color: var(--ink); }
+  .icon-btn { border: 0; border-radius: 12px; display: grid; place-items: center; }
+  .note { background: #fff1e8; border-radius: 12px; padding: 10px 12px; }
+  .error { color: #b91c1c; }
+  @media (max-width: 600px) {
+    body { background: var(--bg); }
+    #screen { border: 0; border-radius: 0; margin-bottom: 0; }
+    .site-header, .screen-bar, .pad { padding: 16px; }
+    .screen-bar h1 { font-size: 22px; }
+  }
+
+  .todo-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; min-width: 0; }
+  .todo-head { display: grid; grid-template-columns: 28px minmax(0, 1fr) 44px; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .todo-head input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--orange); margin: 0; }
+  .todo-head .field { margin: 0; min-width: 0; }
+  .todo-head .icon-btn { width: 44px; height: 44px; box-shadow: none; background: var(--surface); font-size: 18px; }
+  .todo-card .field:last-child { margin: 0; }
+  .todo-card textarea { min-height: 76px; }
+  .todo-completed [data-testid="todo-item-title"] { text-decoration: line-through; color: var(--muted); }
+  .todo-add { display: flex; gap: 8px; align-items: end; }
+  .todo-add .field { flex: 1; min-width: 0; margin: 0; }
+  .todo-add .btn { padding: 0 14px; }
+  .todo-summary { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 18px 0 10px; }
+  .todo-summary h2 { font-size: 17px; margin: 0; }
+  .todo-undo { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 0; }
+  .todo-export { padding: 0 12px; min-height: 42px; font-size: 14px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+
+  .todo-head textarea { min-height: 50px; resize: none; overflow: hidden; }
+</style>
+</head>
+<body data-document="hosts-todo-public-shell">
+<header class="site-header"><a href="./" aria-label="Back to app">← Back to app</a><span class="brand">HOSTS</span></header>
+<main id="screen"></main>
+<script>
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const bar = (title, extra = '') => `<div class="screen-bar"><h1>${esc(title)}</h1>${extra}</div>`;
+function show(html) { $('#screen').innerHTML = html; }
+function resizeTodoTitle(el) { el.style.height = 'auto'; el.style.height = (el.scrollHeight + 2) + 'px'; }
+
+const TODO_KEY = 'hosts-todo-v1';
+let todoDoc, deletedTodo = null;
+let todoSaveStatus = 'Changes save automatically in this browser';
+function loadTodo() {
+  todoDoc = { version: 1, title: 'HOSTS to-do & notes', notes: '', items: [] };
+  try {
+    const raw = localStorage.getItem(TODO_KEY);
+    if (raw === null) return;
+    const doc = JSON.parse(raw);
+    if (!doc || doc.version !== 1 || typeof doc.title !== 'string' || typeof doc.notes !== 'string' || !Array.isArray(doc.items) ||
+        !doc.items.every((item) => item && typeof item.title === 'string' && typeof item.notes === 'string' && typeof item.done === 'boolean')) {
+      throw new Error('Invalid document');
+    }
+    todoDoc = doc;
+    todoSaveStatus = 'Saved in this browser';
+  } catch {
+    todoSaveStatus = 'Could not load a saved document. Changes last for this visit unless saving succeeds. Export a copy before leaving.';
+  }
+}
+function saveTodo() {
+  try {
+    localStorage.setItem(TODO_KEY, JSON.stringify(todoDoc));
+    todoSaveStatus = 'Saved in this browser';
+  } catch {
+    todoSaveStatus = 'Could not save in this browser. Changes last for this visit. Export a copy before leaving.';
+  }
+  const el = $('[data-testid="todo-save-status"]');
+  if (el) { el.textContent = todoSaveStatus; el.classList.toggle('error', todoSaveStatus.startsWith('Could not')); }
+}
+function todoPage() {
+  if (!todoDoc) loadTodo();
+  show(`${bar('To-do & notes', '<button class="btn ghost todo-export" data-testid="todo-export" onclick="exportTodo()">Export .md</button>')}
+    <div class="pad">
+      <p class="sub" style="margin-top:0">Your working document. Saved on this browser only; export a copy to share or keep a backup.</p>
+      <p class="sub ${todoSaveStatus.startsWith('Could not') ? 'error' : ''}" data-testid="todo-save-status" role="status">${esc(todoSaveStatus)}</p>
+      <label class="field">Document title<input data-testid="todo-title" maxlength="200" value="${esc(todoDoc.title)}" oninput="todoDoc.title=this.value;saveTodo()"></label>
+      <label class="field">Document notes<textarea data-testid="todo-notes" maxlength="20000" placeholder="Ideas, questions, decisions…" oninput="todoDoc.notes=this.value;saveTodo()">${esc(todoDoc.notes)}</textarea></label>
+      <form class="todo-add" onsubmit="addTodo(event)">
+        <label class="field">New task<input data-testid="todo-new" maxlength="300" required placeholder="What needs doing?" oninput="this.setCustomValidity('')"></label>
+        <button class="btn" type="submit" data-testid="todo-add">Add</button>
+      </form>
+      ${deletedTodo ? '<div class="note todo-undo"><span>Task deleted.</span><button class="btn ghost" data-testid="todo-undo" onclick="undoTodo()">Undo</button></div>' : ''}
+      <div class="todo-summary"><h2>Tasks</h2><span class="sub" data-testid="todo-progress" role="status"></span></div>
+      <div class="stack">${todoDoc.items.length ? todoDoc.items.map((item, i) => `
+        <div class="todo-card ${item.done ? 'todo-completed' : ''}" data-testid="todo-item">
+          <div class="todo-head">
+            <input type="checkbox" data-testid="todo-done" aria-label="Task completed" ${item.done ? 'checked' : ''} onchange="updateTodo(${i},'done',this.checked);this.closest('.todo-card').classList.toggle('todo-completed',this.checked)">
+            <label class="field"><span class="sr-only">Task title</span><textarea rows="1" aria-label="Task title" data-testid="todo-item-title" maxlength="300" oninput="resizeTodoTitle(this);updateTodo(${i},'title',this.value)">${esc(item.title)}</textarea></label>
+            <button class="icon-btn" data-testid="todo-delete" aria-label="Delete task" title="Delete task" onclick="deleteTodo(${i})">×</button>
+          </div>
+          <label class="field">Task notes<textarea data-testid="todo-item-notes" maxlength="20000" placeholder="Add context, links or next steps…" oninput="updateTodo(${i},'notes',this.value)">${esc(item.notes)}</textarea></label>
+        </div>`).join('') : '<div class="empty">No tasks yet. Add your first task above.</div>'}</div>
+    </div>`);
+  updateTodoProgress();
+  document.querySelectorAll('[data-testid="todo-item-title"]').forEach(resizeTodoTitle);
+}
+function updateTodoProgress() {
+  const el = $('[data-testid="todo-progress"]');
+  if (el) el.textContent = `${todoDoc.items.filter((item) => item.done).length} of ${todoDoc.items.length} completed`;
+}
+function addTodo(event) {
+  event.preventDefault();
+  const input = $('[data-testid="todo-new"]');
+  const title = input.value.trim();
+  if (!title) { input.setCustomValidity('Enter a task title.'); input.reportValidity(); return; }
+  todoDoc.items.push({ title, notes: '', done: false });
+  saveTodo(); todoPage(); $('[data-testid="todo-new"]').focus();
+}
+function updateTodo(index, field, value) {
+  todoDoc.items[index][field] = value;
+  saveTodo();
+  if (field === 'done') updateTodoProgress();
+}
+function deleteTodo(index) {
+  deletedTodo = { index, item: todoDoc.items.splice(index, 1)[0] };
+  saveTodo(); todoPage(); $('[data-testid="todo-undo"]').focus();
+}
+function undoTodo() {
+  if (!deletedTodo) return;
+  const index = Math.min(deletedTodo.index, todoDoc.items.length);
+  todoDoc.items.splice(index, 0, deletedTodo.item);
+  deletedTodo = null;
+  saveTodo(); todoPage(); document.querySelectorAll('[data-testid="todo-item-title"]')[index].focus();
+}
+function exportTodo() {
+  const tasks = todoDoc.items.map((item) => `- [${item.done ? 'x' : ' '}] ${item.title}${item.notes ? '\n' + item.notes.split('\n').map((line) => '  ' + line).join('\n') : ''}`).join('\n\n');
+  const text = `# ${todoDoc.title || 'HOSTS to-do & notes'}\n\n${todoDoc.notes ? todoDoc.notes + '\n\n' : ''}## Tasks\n\n${tasks}\n`;
+  const url = URL.createObjectURL(new Blob([text], { type: 'text/markdown;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url; a.download = 'hosts-todo.md'; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+
+todoPage();
+</script>
+</body>
+</html>
